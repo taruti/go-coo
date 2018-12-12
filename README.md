@@ -56,7 +56,6 @@ east, north, _ := coo.Transform(500000.000, 5761038.212, 0, etrs89utm32N, dhdn20
 // &coo.Geocentric{} -> WGS84, &coo.Geographic{} -> WGS84 Geographic, &coo.Projected{} -> Web Mercator WGS84
 x, y, z := coo.Transform(1001875.417, 6800125.454, 0, &coo.Projected{}, &coo.Geocentric{})
 lon, lat, h := coo.Transform(x, y, z, &coo.Geocentric{}, &coo.Geographic{})
-fmt.Println(lon, lat, h)
 ```
 
 ## EPSG
