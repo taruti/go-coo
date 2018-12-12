@@ -6,43 +6,69 @@ Coordinate conversion and transformation package in pure Go(lang).
 
 ```go
 go get github.com/wroge/go-coo
+
+import (
+	"github.com/wroge/go-coo"
+)
 ```
 
-## Examples
+## Features
+
+- Coordinate conversion between projected coordinate systems and geographical coordinates.
 
 ```go
-east, north, _ := coo.UTM(32, "N").FromGeographic(9, 52, coo.GRS80)
+texasLambert := coo.ConformalConic(27.5, 35, 18, -100, 1500000, 5000000)
+lon, lat := texasLambert.ToGeographic(1492401.186, 6484663.429, coo.GRS80)
+east, north := texasLambert.FromGeographic(-100.080, 31.316, coo.GRS80)
+```
 
-east, north, _ := coo.ConformalConic(43, 62, 30, 10, 0, 0).FromGeographic(9, 52, coo.Hayford)
+- Coordinate conversion between different projected coordinate systems.
 
-proj := &coo.Projected{}
-geogr := &coo.Geographic{}
-east, north, _ := coo.Transform(9, 52, 100, geogr, proj)
+```go
+east, north := coo.Convert(1001875.417, 6800125.454, coo.WebMercator, 
+    coo.UTM(32, "N"), coo.WGS84)
+east, north = coo.Convert(500000.000, 5761038.212, coo.UTM(32, "N"), 
+    coo.WebMercator, coo.WGS84)
+```
 
-webmercator := &coo.Projected{
-    System: coo.WebMercator,
-}
-dhdnGK3 := &coo.Projected{
+- Coordinate transformation between different coordinate systems.
+
+```go
+etrs89utm32N := &coo.Projected{
     Geographic: &coo.Geographic{
-        Geocentric: &coo.Geocentric{
-            Geocentric: nil,
-            Tx:         598.1,
-            Ty:         73.7,
-            Tz:         418.2,
-            Rx:         0.202,
-            Ry:         0.045,
-            Rz:         -2.455,
-            Ds:         6.7,
-        },
-        Ellipsoid: coo.Bessel,
+        Ellipsoid: coo.GRS80,
     },
-    System: coo.GaussKrueger(3)
+    System: coo.UTM(32, "N"),
 }
-east, north, _ := coo.Transform(1.0018754171394621e+06, 6.800125454397305e+06, 100, webmercator, dhdnGK3)
+dhdn2001gk3 := &coo.Projected{
+    Geographic: &coo.Geographic{
+        Geocentric: de.DHDN2001,
+        Ellipsoid:  coo.Bessel,
+    },
+    System: coo.GaussKrueger(3),
+}
+east, north, _ := coo.Transform(500000.000, 5761038.212, 0, etrs89utm32N, dhdn2001gk3)
+```
+
+- Standard coordinate systems
+
+```go
+wgs84geocentric := &coo.Geocentric{}
+wgs84geographic := &coo.Geographic{}
+wgs84webmercator := &coo.Projected{}
+x, y, z := coo.Transform(1001875.417, 6800125.454, 0, wgs84webmercator, wgs84geocentric)
+lon, lat, h := coo.Transform(x, y, z, wgs84geocentric, wgs84geographic)
+
+// To avoid errors, projections should first be validated
+// wgs84webmercator.Validate()
 ```
 
 ## EPSG
 
+EPSG is a sub-package to which EPSG codes are added on a regular basis.
+
 ```go
-wgs84geogr, err := epsg.Code(4326)
+import (
+	"github.com/wroge/go-coo/epsg"
+)
 ```

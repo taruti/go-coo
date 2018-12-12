@@ -13,3 +13,9 @@ func Transform(x, y, z float64, from ToSource, to FromSource) (xN, yN, zN float6
 	xN, yN, zN = to.FromSource(x, y, z)
 	return
 }
+
+func Convert(east, north float64, from *System, to *System, ell *Ellipsoid) (eastN, northN float64) {
+	lon, lat := from.ToGeographic(east, north, ell)
+	eastN, northN = to.FromGeographic(lon, lat, ell)
+	return
+}

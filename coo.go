@@ -22,8 +22,8 @@ type Projected struct {
 }
 
 type System struct {
-	ToGeographic   func(east, north float64, ell *Ellipsoid) (lon, lat float64)
-	FromGeographic func(lon, lat float64, ell *Ellipsoid) (east, north float64)
+	toGeographic   func(east, north float64, ell *Ellipsoid) (lon, lat float64)
+	fromGeographic func(lon, lat float64, ell *Ellipsoid) (east, north float64)
 }
 
 var DefaultSystem = WebMercator
@@ -108,6 +108,14 @@ func (proj *Projected) FromSource(xS, yS, zS float64) (east, north, h float64) {
 	x, y, z := proj.Geocentric.FromSource(xS, yS, zS)
 	east, north, h = proj.FromGeocentric(x, y, z)
 	return
+}
+
+func (sys *System) ToGeographic(east, north float64, ell *Ellipsoid) (lon, lat float64) {
+	return sys.toGeographic(east, north, ell)
+}
+
+func (sys *System) FromGeographic(lon, lat float64, ell *Ellipsoid) (east, north float64) {
+	return sys.fromGeographic(lon, lat, ell)
 }
 
 func (geogr *Geographic) Validate() {

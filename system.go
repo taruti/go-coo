@@ -5,7 +5,7 @@ import (
 )
 
 var WebMercator = &System{
-	ToGeographic: func(east, north float64, ell *Ellipsoid) (lon, lat float64) {
+	toGeographic: func(east, north float64, ell *Ellipsoid) (lon, lat float64) {
 		if ell == nil {
 			ell = DefaultEllipsoid
 		}
@@ -14,7 +14,7 @@ var WebMercator = &System{
 		lat = math.Atan(math.Exp(north/a))*toDeg*2 - 90
 		return
 	},
-	FromGeographic: func(lon, lat float64, ell *Ellipsoid) (east, north float64) {
+	fromGeographic: func(lon, lat float64, ell *Ellipsoid) (east, north float64) {
 		if ell == nil {
 			ell = DefaultEllipsoid
 		}
@@ -27,7 +27,7 @@ var WebMercator = &System{
 
 func TransverseMercator(centralMeridian, scale, falseEasting, falseNorthing float64) *System {
 	return &System{
-		ToGeographic: func(east, north float64, ell *Ellipsoid) (lon, lat float64) {
+		toGeographic: func(east, north float64, ell *Ellipsoid) (lon, lat float64) {
 			if ell == nil {
 				ell = DefaultEllipsoid
 			}
@@ -78,7 +78,7 @@ func TransverseMercator(centralMeridian, scale, falseEasting, falseNorthing floa
 			lon = centralMeridian + (L1+L2+L3+L4)*toDeg
 			return
 		},
-		FromGeographic: func(lon, lat float64, ell *Ellipsoid) (east, north float64) {
+		fromGeographic: func(lon, lat float64, ell *Ellipsoid) (east, north float64) {
 			if ell == nil {
 				ell = DefaultEllipsoid
 			}
@@ -149,7 +149,7 @@ func GaussKrueger(zone float64) *System {
 
 func ConformalConic(lat1, lat2, falseLat, falseLon, falseEasting, falseNorthing float64) *System {
 	return &System{
-		ToGeographic: func(east, north float64, ell *Ellipsoid) (lon, lat float64) {
+		toGeographic: func(east, north float64, ell *Ellipsoid) (lon, lat float64) {
 			if ell == nil {
 				ell = DefaultEllipsoid
 			}
@@ -190,7 +190,7 @@ func ConformalConic(lat1, lat2, falseLat, falseLon, falseEasting, falseNorthing 
 			lon = (yi/n + falseLon*toRad) * toDeg
 			return
 		},
-		FromGeographic: func(lon, lat float64, ell *Ellipsoid) (east, north float64) {
+		fromGeographic: func(lon, lat float64, ell *Ellipsoid) (east, north float64) {
 			lon *= toRad
 			lat *= toRad
 			if ell == nil {
