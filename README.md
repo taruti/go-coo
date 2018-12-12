@@ -53,14 +53,10 @@ east, north, _ := coo.Transform(500000.000, 5761038.212, 0, etrs89utm32N, dhdn20
 - Standard coordinate systems
 
 ```go
-wgs84geocentric := &coo.Geocentric{}
-wgs84geographic := &coo.Geographic{}
-wgs84webmercator := &coo.Projected{}
-x, y, z := coo.Transform(1001875.417, 6800125.454, 0, wgs84webmercator, wgs84geocentric)
-lon, lat, h := coo.Transform(x, y, z, wgs84geocentric, wgs84geographic)
-
-// To avoid errors, projections should first be validated
-// wgs84webmercator.Validate()
+// &coo.Geocentric{} -> WGS84, &coo.Geographic{} -> WGS84 Geographic, &coo.Projected{} -> Web Mercator WGS84
+x, y, z := coo.Transform(1001875.417, 6800125.454, 0, &coo.Projected{}, &coo.Geocentric{})
+lon, lat, h := coo.Transform(x, y, z, &coo.Geocentric{}, &coo.Geographic{})
+fmt.Println(lon, lat, h)
 ```
 
 ## EPSG
