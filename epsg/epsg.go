@@ -106,6 +106,11 @@ var Code5650 = &coo.Projected{
 	System:     coo.TransverseMercator(15, 0.9996, 33500000, 0),
 }
 
+var Code3067 = &coo.Projected{
+	Geographic: Code4258,
+	System:     coo.TransverseMercator(27, 0.9996, 500000, 0),
+}
+
 var codes = map[int]FromToSource{
 	4326:   Code4326,
 	3857:   Code3857,
@@ -122,6 +127,7 @@ var codes = map[int]FromToSource{
 	32633:  Code32633,
 	4647:   Code4647,
 	5650:   Code5650,
+	3067:   Code3067,
 }
 
 func Code(code int) (FromToSource, error) {
